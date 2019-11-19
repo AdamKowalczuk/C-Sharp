@@ -1,0 +1,10 @@
+static bool WyszukajBinarnie(int[] tab, int poczatek, int koniec, int szukane)
+    {
+        if (poczatek == koniec)
+            return (tab[poczatek] == szukane);
+        int srodek = (poczatek + koniec) / 2;
+        if (szukane <= tab[srodek])
+            return WyszukajBinarnie(tab, poczatek, srodek, szukane);
+        else
+            return WyszukajBinarnie(tab, srodek + 1, koniec, szukane);
+    }
