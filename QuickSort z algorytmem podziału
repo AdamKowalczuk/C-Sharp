@@ -1,0 +1,97 @@
+class Program
+{
+    static int porównania, zamiany;
+    static int Podzial(int[] T, int l, int p)
+    {
+        int i, j, klucz, tmp, index;
+        // wybierz element centralny
+        // wybieramy jeden z trzech (wyniki na dole)
+    //    index = p; // prawy
+    //    index = l; // lewy
+        index = (l+p)/2; // srodkowy
+        klucz = T[index];
+        // zamiana lewego lub srodkowego z prawym
+        // dla prawego zasadniczo niepotrzebna
+        tmp = T[index];
+        T[index] = T[p];
+        T[p] = tmp;
+        // teraz klucz to wartośc na prawym koncu
+
+        // algorytm dla prawego
+        i = l;// na lewo od indeksu i elementy <= klucz
+        for (j = l; j < p; j++)
+        {
+            porównania++;
+            if (T[j] <= klucz) // zamień
+            {
+                tmp = T[i];
+                T[i] = T[j];
+                T[j] = tmp;
+                i++;
+                zamiany++;
+            }
+        }
+        // wstaw element centralny na swoje miejsce
+        zamiany++;
+        tmp = T[i];
+        T[i] = T[p];
+        T[p] = tmp;
+        return i;
+    }
+
+    static void QuickSort(int[] T, int l, int p)
+    {
+        porównania++;
+        if (l >= p) return;
+        int i = Podzial(T, l, p);
+        QuickSort(T, l, i - 1);
+        QuickSort(T, i + 1, p);
+    }
+
+    static void Wypisz(int[] tab)
+    {
+        for (int i = 0; i < tab.Length; i++)
+            Console.Write(tab[i] + " ");
+        Console.WriteLine();
+    }
+
+    static void Main(string[] args)
+    {
+        int[] tab = { -19, 1, 1, 8, 7, -5, 3, 5, 4, 6 };
+        QuickSort(tab, 0, tab.Length - 1);
+        Wypisz(tab);
+        Console.WriteLine("zamiany " + zamiany + " porównania " + porównania);
+        zamiany = 0;
+        porównania = 0;
+
+        tab = new int[] { 1, 2, 3, 4, 6, 7, 8, 17, 25, 29 };
+        QuickSort(tab, 0, tab.Length - 1);
+        Wypisz(tab);
+        Console.WriteLine("zamiany " + zamiany + " porównania " + porównania);
+        zamiany = 0;
+        porównania = 0;
+
+        tab = new int[] { 19, 10, 5, 4, 3, 1, 0, -1, -2, -5 };
+        QuickSort(tab, 0, tab.Length - 1);
+        Wypisz(tab);
+        Console.WriteLine("zamiany " + zamiany + " porównania " + porównania);
+        zamiany = 0;
+        porównania = 0;
+
+        tab = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+        QuickSort(tab, 0, tab.Length - 1);
+        Wypisz(tab);
+        Console.WriteLine("zamiany " + zamiany + " porównania " + porównania);
+        zamiany = 0;
+        porównania = 0;
+
+        tab = new int[] { 1, 8, 7, -5, 3, 5, 4, 6, 2, 9 };
+        QuickSort(tab, 0, tab.Length - 1);
+        Wypisz(tab);
+        Console.WriteLine("zamiany " + zamiany + " porównania " + porównania);
+        zamiany = 0;
+        porównania = 0;
+
+        Console.ReadKey();
+    }
+}
