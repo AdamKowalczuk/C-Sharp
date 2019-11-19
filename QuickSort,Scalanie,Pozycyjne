@@ -1,0 +1,205 @@
+using System;
+using System.Diagnostics;
+
+// Przetestuj i porównaj (Stopwatch) napisane przez nas metody testowania: 
+// bąbelkowe, szybkie oraz pozycyjne dla losowych 
+// tablic zawierających liczby co najwyżej 6-cio cyfrowe.
+
+    // ZROBILIŚMY dla 
+    // wybieranie, wstawianie, scalanie, szybkie i pozycyjne
+    // przykładowe wyniki na dole strony
+
+class Program
+{
+    static void Wstawianie(int[] L)
+    {
+        int k, j;
+        for (int i = 0; i < L.Length - 1; i++)
+            if (L[i] > L[L.Length - 1])
+            {
+                int tmp = L[L.Length - 1];
+                L[L.Length - 1] = L[i];
+                L[i] = tmp;
+            }
+        // teraz ostatni element jest największy to straznik
+        for (int i = L.Length - 2; i >= 0; i--)
+        {
+            k = L[i];
+            j = i;
+            while (L[j + 1] < k)
+            {
+                L[j] = L[j + 1]; // przesuwam elementy
+                j++;
+            }
+            L[j] = k; // wstawiam w odpowiednie miejsce
+        }
+    }
+
+    static void Wybieranie(int[] L)
+    {
+        for (int i = L.Length - 1; i > 0; i--)
+        { // szukamy najmniejszego elementu w L dla (i, N - 1)
+            int k = i;
+            for (int j = i - 1; j >= 0; j--)
+                if (L[j] > L[k]) k = j;
+            // zamieniamy z go z elementem i-tym
+            int t = L[k]; L[k] = L[i]; L[i] = t;
+        }
+    }
+
+    static void Pozycyjne(int[] A, int podstawa)
+    {
+        int n = A.Length;
+        int[] B = new int[n];
+        int m = A[0]; //szukamy najwiekszej liczby m
+        for (int i = 1; i < n; i++) if (A[i] > m) m = A[i];
+        int exp = 1; // podstawa^0 potem podstawa^1 itd az
+        while (m / exp > 0) //znajdziemy wartosc wieksza od najwiekszej liczby
+        {
+            int[] liczniki = new int[podstawa];
+            //zliczanie wartosci na pozycjach czyli znajdujemy liczniki
+            for (int i = 0; i < n; i++) liczniki[(A[i] / exp) % podstawa]++;
+            //sumujemy liczniki
+            for (int i = 1; i < podstawa; i++) liczniki[i] += liczniki[i - 1];
+            //umieszczmy elementy na swoich pozycjach obnizajac licznik
+            for (int i = n - 1; i >= 0; i--) B[--liczniki[(A[i] / exp) % podstawa]] = A[i];
+            //kopiujemy ciag wyjsciowy do tablicy poczatkowej
+            for (int i = 0; i < n; i++) A[i] = B[i];
+            //przechodzimy do następnej pozycji
+            exp *= podstawa;
+        }
+    }
+
+    static void Scalaj(int[] T, int p, int mid, int k, int[] T2)
+    // p - poczatek, k - koniec, mid - srodek 
+    // łączy 2 posortowane tablice T[p...mid] i T[mid+1...k] 
+    {
+        int p1 = p, k1 = mid; // pod-tablica 1 
+        int p2 = mid + 1, k2 = k; // pod-tablica 2 
+       // aż do wyczerpania tablic dokonaj scalenia przy pomocy tablicy pomocniczej 
+        int i = p1;
+        while ((p1 <= k1) && (p2 <= k2))
+        {
+            if (T[p1] < T[p2])
+            {
+                T2[i] = T[p1];
+                p1++;
+            }
+            else
+            {
+                T2[i] = T[p2];
+                p2++;
+            }
+            i++;
+        }
+        while (p1 <= k1)
+        {
+            T2[i] = T[p1];
+            p1++;
+            i++;
+        }
+        while (p2 <= k2)
+        {
+            T2[i] = T[p2];
+            p2++;
+            i++;
+        } // skopiuj z tablicy tymczasowej do oryginalnej 
+        for (i = p; i <= k; i++) T[i] = T2[i];
+    }
+    static void MergeSort(int[] T, int p, int k, int[] T2)
+    {
+        if (p < k)
+        {
+            int mid = (p + k) / 2; // środek
+            MergeSort(T, p, mid, T2); // sortuj lewą połowę
+            MergeSort(T, mid + 1, k, T2); // sortuj prawą połowę
+            Scalaj(T, p, mid, k, T2); // scalaj
+        }
+    }
+
+    static int Podzial(int[] T, int l, int p)
+    {
+        int i, j, klucz, tmp, index;
+        // wybierz element centralny
+        index = p;
+        klucz = T[index];
+        i = l;// na lewo od indeksu i elementy <= klucz
+        for (j = l; j < p; j++)
+        {
+            if (T[j] <= klucz) // zamień
+            { tmp = T[i]; T[i] = T[j]; T[j] = tmp; i++; }
+        }
+        // wstaw element centralny na swoje miejsce
+        tmp = T[i];
+        T[i] = T[p];
+        T[p] = tmp;
+        return i;
+    }
+
+    static void QuickSort(int[] T, int l, int p)
+    {
+        if (l >= p) return;
+        int i = Podzial(T, l, p);
+        QuickSort(T, l, i - 1);
+        QuickSort(T, i + 1, p);
+    }
+    static void Kopiuj(int[] t, int[] d)
+    {
+        for (int i = 0; i < d.Length; i++) t[i] = d[i];
+    }
+
+    static void Wypisz(int[] t)
+    {
+        for (int i = 0; i < 10; i++) Console.Write(t[i] + " ");
+        Console.WriteLine();
+    }
+    static void Main(string[] args)
+    {
+        Random rand = new Random();
+        int n = 1000000;
+        int[] tab = new int[n];
+        for (int i = 0; i < tab.Length; i++)
+            tab[i] = rand.Next(1000000); // co najwyzej 6-cio cyfrowe
+
+        int[] t = new int[n];
+        Stopwatch s = new Stopwatch();
+
+        Kopiuj(t, tab);
+        s.Reset();
+        s.Start();
+        Wybieranie(t);
+        s.Stop();
+        Console.WriteLine(n + " wybieranie " + s.ElapsedTicks);
+
+        Kopiuj(t, tab);
+        s.Reset();
+        s.Start();
+        Wstawianie(t);
+        s.Stop();
+        Console.WriteLine(n + " wstawianie " + s.ElapsedTicks);
+
+        Kopiuj(t, tab);
+        int[] t2 = new int[n];
+        s.Reset();
+        s.Start();
+        MergeSort(t, 0, t.Length-1, t2);
+        s.Stop();
+        Console.WriteLine(n + " mergesort " + s.ElapsedTicks);
+
+        Kopiuj(t, tab);
+        s.Reset();
+        s.Start();
+        QuickSort(t, 0, t.Length - 1);
+        s.Stop();
+        Console.WriteLine(n + " quicksort " + s.ElapsedTicks);
+
+        Kopiuj(t, tab);
+        s.Reset();
+        s.Start();
+        Pozycyjne(t, 10);
+        s.Stop();
+        Console.WriteLine(n + " pozycyjne " + s.ElapsedTicks);
+
+        Console.ReadKey();
+    }
+}
