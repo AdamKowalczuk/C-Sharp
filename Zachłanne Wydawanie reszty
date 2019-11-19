@@ -1,0 +1,41 @@
+static int Reszta(int[] nominały, int reszta, int[] ile)
+    {
+        int liczba = 0;
+
+        for (int i = 0; i < nominały.Length && reszta > 0; i++)
+        {
+            int n = reszta / nominały[i];
+            liczba = liczba + n;
+            ile[i] = n;
+            reszta = reszta % nominały[i];
+        }
+        return liczba;
+    }
+
+    static void Main(string[] args)
+    {
+        int[] nominaly = { 22, 19, 10, 5, 3, 1 };
+        int reszta = 825;
+        int[] ile = new int[nominaly.Length];
+        Console.WriteLine(reszta + " " + Reszta(nominaly, reszta, ile));
+        for (int i = 0; i < nominaly.Length; i++)
+        {
+            Console.Write(nominaly[i] + ": " + ile[i] + ", ");
+        }
+        Console.WriteLine();
+        reszta = 10;
+        Console.WriteLine(reszta + " " + Reszta(nominaly, reszta, ile));
+        for (int i = 0; i < nominaly.Length; i++)
+        {
+            Console.Write(nominaly[i] + ": " + ile[i] + ", ");
+        }
+        Console.WriteLine();
+        reszta = 38;
+        Console.WriteLine(reszta + " " + Reszta(nominaly, reszta, ile));
+        for (int i = 0; i < nominaly.Length; i++)
+        {
+            Console.Write(nominaly[i] + ": " + ile[i] + ", ");
+        }
+        Console.WriteLine();
+        Console.ReadKey();
+    }
