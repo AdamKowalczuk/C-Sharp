@@ -1,0 +1,47 @@
+using System;
+using System.Collections.Generic;
+
+//    Jest N przedmiotów. Każdy waży wi kilogramów i kosztuje ci.
+//    Możemy unieść maksymalnie K kilogramów.
+//    Które przedmioty wziąć, aby łączna wartość zabranych towarów była jak największa?
+class Program
+{
+    
+    static int Plecak(int[] wagi,int[] ceny,int n, int k )
+    {
+        int[,] w = new int[n + 1, k + 1];
+        for (int i = 0; i < n+1; i++)
+        {
+            w[i, 0] = 0;
+        }
+        for (int j = 0; j < k+1 ; j++)
+        {
+            w[0, j] = 0;
+        }
+
+        for (int i = 1; i < n+1; i++)
+        {
+            for (int j = 1; j < k+1; j++)
+            {
+                int m = Math.Max(w[i - 1, j], w[i, j - 1]);
+                if (j >= wagi[i-1])
+                {
+                    m = Math.Max(m, w[i - 1, j - wagi[i - 1]] + ceny[i - 1]);
+                }
+                w[i, j] = m;
+            }
+        }
+
+        return w[n, k];
+    }
+    static void Main(string[] args)
+    {
+        int[] wagi = { 16, 15, 10, 5, 7 };
+        int[] ceny = { 8, 7, 6, 9, 3 };
+        int n = 5;
+        int k = 50;
+        Console.WriteLine(Plecak(wagi,ceny,n,k));
+        Console.ReadKey();
+    }
+}
+
