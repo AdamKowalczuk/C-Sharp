@@ -1,0 +1,27 @@
+static void QuickSort(int[] arr, int lo, int hi)
+    {
+        int i = lo;
+        int j = hi;
+        int pivot = arr[lo]; // lewy, ale moze byc kazdy inny
+
+        do
+        {
+            while (arr[i] < pivot) i++;
+            while (arr[j] > pivot) j--;
+
+            if (i <= j)
+            {
+                int t = arr[i];
+                arr[i] = arr[j];
+                arr[j] = t;
+                i++;
+                j--;
+            }
+        } while (i <= j);
+
+        if (j > lo) QuickSort(arr, lo, j);
+        if (i < hi) QuickSort(arr, i, hi);
+        // tu przypadki gdy przedział jednoelementowy lub pusty
+        // czyli koniec rekurencji
+        return;
+    }
