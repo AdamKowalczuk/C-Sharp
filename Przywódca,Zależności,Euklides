@@ -1,0 +1,192 @@
+static int ZnajdzPrzywodcę(int[] tab) // O(n)
+    {
+        int kandydat = tab[0];
+        int ile = 1; //o ile przywodcow wiecej niz pozostalych
+        for (int i = 1; i < tab.Length; i++)
+        {
+            if (ile == 0)
+            {
+                kandydat = tab[i];
+            }
+            if (tab[i] == kandydat)
+            {
+                ile++;
+            }
+            else
+            {
+                ile--; //rezygnujemy z jednego kandydata i niekandydata
+            }
+        }
+        // jeszcze się upewniamy
+        // ale założenie jest że przywódca jest
+        if (CzyPrzywodca(tab, kandydat))
+        {
+            return kandydat;
+        }
+        else
+        {
+            return -1;
+        }
+    }
+    
+    
+    
+    // 1/n   <  1
+        //  1    <  lg n
+        //  lg n < √n         reguła d'Hospitala (1/n)/(1/2√n) = 2/√n -> 0
+        //    √n < n lg n
+        // n lg n<  n^4
+        //   n^4 <  n^lg n
+        //n^lg n < 2^n    logarytmujemy obustronnie, logarytm jest f-cją monotoniczną
+        //                czyli mamy (lg n)^2 < n   i reguła d'Hospitala 
+        //                ((lg n)^2)/(n) = (2 lg n)/n -> 0
+        //   2^n <  3^n
+        //   3^n <  n!
+        //   n!  <  n^n
+        
+        
+        class Program
+{
+    static long kroki;
+    static long NWDO(long m, long n)
+    {
+        while (n > 0) // na starcie obie wartości są dodatnie
+        {
+            kroki++;
+            if (m > n) //zamiana
+            {
+                long t = m;
+                m = n;
+                n = t;
+            }
+            n = n - m;
+        }
+        return m;
+    }
+    static long NWDD(long m, long n)
+    {
+        while (n > 0)
+        {
+            kroki++;
+            long t = m;
+            m = n;
+            n = t % n; // jeśli m<n to t%n da m, czyli nastąpi zamiana
+        }
+        return m;
+    }
+
+    static void Main(string[] args)
+    {
+        long m = 100000000;
+        long n = 1;
+        long w = NWDO(m, n);
+        w = NWDD(m, n);
+
+        Stopwatch licznik = new Stopwatch();
+        kroki = 0;
+        licznik.Start();
+        w = NWDO(m, n);
+        licznik.Stop();
+        Console.WriteLine("liczby " + m + " " + n + " nwd " + w + "\nodejmowanie tik " + licznik.ElapsedTicks + " kroki " + kroki);
+        licznik.Reset();
+
+        kroki = 0;
+        licznik.Start();
+        w = NWDD(m, n);
+        licznik.Stop();
+        Console.WriteLine("liczby " + m + " " + n + " nwd " + w + "\ndzielenie  tik " + licznik.ElapsedTicks + " kroki " + kroki);
+        licznik.Reset();
+
+        m = 100000000;
+        n = 7;
+        kroki = 0;
+        licznik.Start();
+        w = NWDO(m, n);
+        licznik.Stop();
+        Console.WriteLine("liczby " + m + " " + n + " nwd " + w + "\nodejmowanie tik " + licznik.ElapsedTicks + " kroki " + kroki);
+        licznik.Reset();
+
+        kroki = 0;
+        licznik.Start();
+        w = NWDD(m, n);
+        licznik.Stop();
+        Console.WriteLine("liczby " + m + " " + n + " nwd " + w + "\ndzielenie tik " + licznik.ElapsedTicks + " kroki " + kroki);
+        licznik.Reset();
+
+        int k = 3;
+        Random r = new Random();
+        Console.WriteLine("\nteraz jakieś losowe wartości\n");
+        while (k > 0)
+        {
+            m = r.Next();
+            n = r.Next();
+            kroki = 0;
+            licznik.Start();
+            w = NWDO(m, n);
+            licznik.Stop();
+            Console.WriteLine("liczby " + m + " " + n + " nwd " + w + "\nodejmowanie tik " + licznik.ElapsedTicks + " kroki " + kroki);
+            licznik.Reset();
+
+            kroki = 0;
+            licznik.Start();
+            w = NWDD(m, n);
+            licznik.Stop();
+            Console.WriteLine("liczby " + m + " " + n + " nwd " + w + "\ndzielenie tik " + licznik.ElapsedTicks + " kroki " + kroki);
+            licznik.Reset();
+
+            k--;
+        }
+
+        k = 5;
+        Console.WriteLine("\nteraz {0} razy elementy ciągu Fibonacciego\n", k);
+        m = 308061521170129;//71
+        n = 190392490709135; //70
+
+        while (k > 0)
+        {
+            kroki = 0;
+            licznik.Start();
+            w = NWDO(m, n);
+            licznik.Stop();
+            Console.WriteLine("liczby " + m + " " + n + " nwd " + w + "\nodejmowanie tik " + licznik.ElapsedTicks + " kroki " + kroki);
+            licznik.Reset();
+
+            kroki = 0;
+            licznik.Start();
+            w = NWDD(m, n);
+            licznik.Stop();
+            Console.WriteLine("liczby " + m + " " + n + " nwd " + w + "\ndzielenie tik " + licznik.ElapsedTicks + " kroki " + kroki);
+            licznik.Reset();
+            long tmp = m;
+            m = m + n;
+            n = tmp;
+            k--;
+        }
+
+
+
+        Console.WriteLine("\nteraz jakieś inne duże wartości\n");
+        // jakieś inne duże wartości
+        m = 8957308061521170198;//
+        n = 2390392490709137; //
+
+        kroki = 0;
+        licznik.Start();
+        w = NWDO(m, n);
+        licznik.Stop();
+        Console.WriteLine("liczby " + m + " " + n + " nwd " + w + "\nodejmowanie tik " + licznik.ElapsedTicks + " kroki " + kroki);
+        licznik.Reset();
+
+        kroki = 0;
+        licznik.Start();
+        w = NWDD(m, n);
+        licznik.Stop();
+        Console.WriteLine("liczby " + m + " " + n + " nwd " + w + "\ndzielenie tik " + licznik.ElapsedTicks + " kroki " + kroki);
+        licznik.Reset();
+
+        Console.ReadKey();
+    }
+}
+
+        
+        
