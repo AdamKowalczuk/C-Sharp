@@ -30,6 +30,22 @@ static int ZnajdzPrzywodcę(int[] tab) // O(n)
     }
     
     
+    static int Przywódca(int[] tab, int poczatek, int koniec)
+    {
+        if (poczatek == koniec) return tab[poczatek];
+
+        int srodek = (poczatek + koniec) / 2;
+        int kandydat1 = Przywódca(tab, poczatek, srodek);
+        int kandydat2 = Przywódca(tab, srodek + 1, koniec);
+        int ile = 0;
+        for(int i = poczatek; i<=koniec; i++)
+        {
+            if (kandydat1 == tab[i]) ile++;
+        }
+        if (ile > (koniec - poczatek + 1) / 2) return kandydat1;
+        else return kandydat2;
+    }
+    
     
     // 1/n   <  1
         //  1    <  lg n
