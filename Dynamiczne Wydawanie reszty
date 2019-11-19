@@ -1,0 +1,27 @@
+static void Wypełnij(int[] nominaly, int[] ile)
+    {
+        ile[0] = 0;
+
+        for(int i =1; i < ile.Length; i++)
+        {
+            int min = int.MaxValue;
+            for(int k=0; k< nominaly.Length;k++)
+            {
+                // ile nominałow dla kwoty mniejszej niż dany nominał
+                if(i-nominaly[k] >=0)
+                {
+                    if (min > ile[i - nominaly[k]])// nie zrobic kwoty ujemnej
+                        min = ile[i - nominaly[k]];
+                }
+            }
+            ile[i] = min + 1;
+        }
+    }
+    static void Main(string[] args)
+    {
+        int[] nominaly = { 22, 19, 10, 5, 3, 1 };
+        int[] ile = new int[1001];
+        Wypełnij(nominaly, ile);
+        Console.WriteLine(ile[38]);
+        Console.ReadKey();
+    }
