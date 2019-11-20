@@ -1,0 +1,14 @@
+static void Wstawianie( int[] tab )
+{
+    for( int i = 1; i < tab.Length; i++ )
+    {
+        int key = tab[ i ];
+        int j = i;
+        while( j > 0 && tab[ j - 1 ] < key )
+        {
+            tab[ j ] = tab[ j - 1 ];
+            j--;
+        }
+        tab[ j ] = key;
+    }
+}
