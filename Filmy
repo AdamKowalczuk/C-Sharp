@@ -1,0 +1,75 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+namespace Zad4_Filmy
+{
+    class Seans
+    {
+        public int p;
+        public int k;
+
+        public Seans(int p, int k)
+        {
+            this.p = p;
+            this.k = k;
+        }
+    }
+
+    
+    class Program
+    {
+        static List<Seans> Zadanie4(List<Seans> s)
+        {
+            s.Sort((seans, seans1) => seans.p - seans1.p);
+
+            List<Seans> res = new List<Seans>();
+            res.Add(new Seans(0, 0));
+            List<int> minPs = new List<int>();
+
+
+            for (int i = 0; i < s.Count; i++)
+            {
+                if (minPs.IndexOf(s[i].p) == -1)
+                    minPs.Add(s[i].p);
+            }
+
+            for (int i = 0; i < minPs.Count; i++)
+            {
+                Seans maxTime = new Seans(0, 0);
+
+                for (int j = 0; j < s.Count; j++)
+                {
+                    if (s[j].p == minPs[i] && s[j].k - s[j].p > maxTime.k - maxTime.p && res.Last().k <= s[j].p)
+                        maxTime = s[j];
+                }
+                if (maxTime.p + maxTime.k != 0)
+                    res.Add(maxTime);
+            }
+
+            res.RemoveAt(0);
+            return res;
+        }
+
+        static void Main(string[] args)
+        {
+            
+            List<Seans> l = new List<Seans>()
+            {
+                new Seans(1, 2),
+                new Seans(5, 10),
+                new Seans(2, 7),
+                new Seans(2, 4),
+                new Seans(9, 15)
+            };
+            Zadanie4(l);
+            
+             
+            Console.ReadKey();
+
+        }
+    }
+}
