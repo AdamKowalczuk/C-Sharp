@@ -1,0 +1,123 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+ 
+namespace K_2018_Zad5
+{
+    class Program
+    {
+ 
+        static int Kara(int[,] d, int[,]p, int[,] s, int m, int n, int[,] kroki)
+        {
+            int[,] wynik = new int[n + 1, m + 1];
+            wynik[0, 0] = 0;
+            for (int i = 1; i <= n; i++)
+            {
+                wynik[i, 0] = wynik[i - 1, 0] + d[i - 1, 0];
+                kroki[i, 0] = 1;//down
+            }
+ 
+            for (int j = 1; j <= m; j++)
+            {
+                wynik[0, j] = wynik[0, j - 1] + p[0, j - 1];
+                kroki[0, j] = 2;//right
+            }
+ 
+            for (int i = 1; i <= n; i++)
+            {
+                for (int j = 1; j <= m; j++)
+                {
+                    if ((wynik[i - 1, j] + d[i - 1, j]> wynik[i, j - 1] + p[i, j - 1]) && p[i,j-1] != -1)
+                    {
+                        if (wynik[i, j - 1] + p[i, j - 1] > wynik[i-1,j-1] + s [i-1,j-1])
+                        {
+                            wynik[i, j] = wynik[i - 1, j - 1] + s[i - 1, j - 1];
+                            kroki[i, j] = 3;
+                        }
+                        else
+                        {
+                            wynik[i, j] = wynik[i, j - 1] + p[i, j - 1];
+                            kroki[i, j] = 2;
+                        }
+                    }
+                    else
+                    {
+                        if (wynik[i - 1, j] + d[i - 1, j] > wynik[i - 1, j - 1] + s[i - 1, j - 1])
+                        {
+                            wynik[i, j] = wynik[i - 1, j - 1] + s[i - 1, j - 1];
+                            kroki[i, j] = 3;
+                        }
+                        else
+                        {
+                            wynik[i, j] = wynik[i - 1, j] + d[i - 1, j];
+                            kroki[i, j] = 1;
+                        }
+                    }
+                }
+            }
+            return wynik[n, m];
+        }
+ 
+        static void Ścieżka(int[,] kroki, int m, int n)
+        {
+            Stack<string> ścieżka = new Stack<string>();
+            int i = n;
+            int j = m;
+            while (kroki[i,j]>0)
+            {
+                if (kroki[i, j] == 1)
+                {
+                    ścieżka.Push("down");
+                    i--;
+                }
+                else if (kroki[i, j] == 2)
+                {
+                    ścieżka.Push("right");
+                    j--;
+                }
+                else
+                {
+                    ścieżka.Push("skos");
+                    i--;
+                    j--;
+                }
+                ;
+            }
+            while (ścieżka.Count > 0)
+            {
+                Console.WriteLine(ścieżka.Pop()); //Pop usuwa ze stosu
+            }
+        }
+ 
+        static void Main(string[] args)
+        {
+            int n = 3;
+            int m = 4;
+            int[,] kroki = new int[n + 1, m + 1];
+            int[,] d =
+            {
+                {1,2,3,5,0 },
+                {1,1,0,9,3 },
+                {2,2,0,1,1 }
+            };
+            int[,] p =
+            {
+                {3,2,0,1 },
+                {-1,-1,-1,-1 },
+                {-1,-1,-1,-1 },
+                {2,1,0,4 }
+            };
+            int[,] s =
+            {
+                {5,2,1,0 },
+                {2,2,2,1 },
+                {0,1,2,3 }
+            };
+            Console.WriteLine(Kara(d,p,s,m,n,kroki));
+            Ścieżka(kroki, m, n);  
+            Console.ReadKey();
+        }
+    }
+}
